@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.cuiwz.dao.IUserDao">
+
+    <!-- 定义User的resultMap-->
+    <resultMap id="userAccountMap" type="com.cuiwz.entity.User">
+        <id property="id" column="id"></id>
+        <result property="username" column="username"></result>
+        <result property="address" column="address"></result>
+        <result property="sex" column="sex"></result>
+        <result property="birthday" column="birthday"></result>
+        <!-- 配置user对象中accounts集合的映射 一对多映射 ofType指的是集合中元素的类型 -->
+        <collection property="accounts" ofType="com.cuiwz.entity.Account">
+            <id column="aid" property="id"></id>
+            <result column="uid" property="uid"></result>
+            <result column="money" property="money"></result>
+        </collection>
+    </resultMap>
+
+    <!-- 查询所有 -->
+    <select id="findAll" resultMap="userAccountMap">
+        select u.*, a.id AS aid, a.uid AS uid, a.money AS money from user u left outer join account a on u.id = a.uid
+    </select>
+
+    <!-- 根据id查询用户 -->
+    <select id="findById" parameterType="INT" resultType="com.cuiwz.entity.User">
+        select * from user where id = #{uid}
+    </select>
+
+</mapper>
